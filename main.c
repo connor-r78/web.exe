@@ -11,7 +11,7 @@ int newEXEHeader(char* data)
 int main()
 {
   FILE* exe;
-  exe = fopen("test.exe", "r");
+  exe = fopen("./tests/test.exe", "r");
   
   char* data = (char*) malloc(3);
   
