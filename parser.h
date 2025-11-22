@@ -1,6 +1,6 @@
 #ifndef PARSER_H
 #define PARSER_H
 
-int run();
+int run(char* exePath, char* wasmPath);
 
 #endif
