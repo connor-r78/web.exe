@@ -1,17 +1,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "errcodes.h"
 #include "offsets.h"
 #include "parser.h"
 
-#define SUCCESS 0
-#define FILE_NOT_FOUND -1
+#define DATA_SIZE                        2
+#define DATA_SIZE_NULL_TERM  DATA_SIZE + 1
+#define STARTING_OFFSET                0x0
 
-#define DATA_SIZE 2
-#define DATA_SIZE_NULL_TERM DATA_SIZE + 1
-#define STARTING_OFFSET 0x0
-
-#define PE_HEADER_LOC 0x3C
+#define PE_HEADER_LOC                 0x3C
 
 int run(char* exePath, char* wasmPath)
 {

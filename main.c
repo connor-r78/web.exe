@@ -2,11 +2,10 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+#include "errcodes.h"
 #include "parser.h"
 
-#define INVALID_USAGE -2
-
-#define ARGS 5
+#define ARGS  5
 
 void print_usage(char* name)
 {
