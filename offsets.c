@@ -1,9 +1,12 @@
+#include <stdio.h>
+
 #include "offsets.h"
 
 #define HEX_BASE 16
 
 void moveOffset(int* offset, int dest)
 {
+  printf("%d\n", dest);
   *offset += ( dest - *offset );
 }
 

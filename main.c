@@ -2,10 +2,11 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-#include "errcodes.h"
-#include "parser.h"
+#define INVALID_USAGE -2
 
-#define ARGS  5
+#define ARGS 5
+
+extern int run(char* exePath, char* wasmPath);
 
 void print_usage(char* name)
 {
