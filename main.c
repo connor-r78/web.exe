@@ -38,5 +38,6 @@ int main(int argc, char** argv)
     }
   }
 
-  return run(exe, wasm);
+  if ( exe && wasm ) return run(exe, wasm);
+  else return INVALID_USAGE;
 }

@@ -1,9 +1,10 @@
-use std::convert::TryInto;
-use std::fs::File;
-use std::io::prelude::*;
-use std::path::Path;
-
 mod errcodes;
+
+use std::convert::TryInto;
+use std::ffi::CStr;
+use std::fs::File;
+use std::io::Read;
+use std::os::raw::c_char;
 use errcodes::{FILE_NOT_FOUND, SUCCESS};
 
 const DATA_SIZE: u8 = 2;
@@ -12,41 +13,39 @@ const STARTING_OFFSET: u8 = 0x0;
 
 const PE_HEADER_LOC: u8 = 0x3C;
 
-fn parseImport()
+fn parse_import()
 {
 
 }
 
 #[no_mangle]
-pub extern "C" fn run(exePath: &str, wasmPath: &str) -> u8
+pub extern "C" fn run(exe_path: *const c_char, wasm_path: *const c_char) -> i8
 {
-  let mut path = Path::new(exePath);
-  let mut display = path.display();
-
-  let mut exe = match File::open(&path) {
-    Err(why) => panic!("Could not open {}: {}", display, why),
-    Ok(exe) => exe,
+  let exe_path_rs = unsafe {
+    match CStr::from_ptr(exe_path).to_str() {
+      Ok(s) => s,
+      Err(_) => return FILE_NOT_FOUND,
+    }
   };
 
-  path = Path::new(wasmPath);
-  display = path.display();
+  let mut exe = File::open(exe_path_rs)
+    .expect("Could not open .exe");
+  let mut data = Vec::new();
+  exe.read_to_end(&mut data);
 
-  let mut wasm = match File::create(&path) {
-    Err(why) => panic!("Could not open {}: {}", display, why),
-    Ok(wasm) => wasm,
+  let wasm_path_rs = unsafe {
+    match CStr::from_ptr(wasm_path).to_str() {
+      Ok(s) => s,
+      Err(_) => return FILE_NOT_FOUND,
+    }
   };
 
-  let mut data = String::new();
-  match exe.read_to_string(&mut data) {
-    Err(why) => panic!("Could not read {}: {}", display, why),
-    Ok(_) => print!("{} contains:\n{}", display, data),
-  }
+  let mut wasm = File::open(wasm_path_rs)
+    .expect("Could not open .wasm");
+  let mut buffer = Vec::new();
+  wasm.read_to_end(&mut buffer);
 
   let mut offset: u32 = STARTING_OFFSET.into();
 
-  while offset <= data.len().try_into().unwrap() {
-    
-  }
-
-  SUCCESS
+  SUCCESS.try_into().unwrap()
 }
